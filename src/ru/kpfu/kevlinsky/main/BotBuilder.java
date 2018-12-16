@@ -1,12 +1,14 @@
-package main;
+package ru.kpfu.kevlinsky.main;
 
-import commands.Command;
+import org.telegram.telegrambots.ApiContextInitializer;
+import ru.kpfu.kevlinsky.commands.Command;
 
 public class BotBuilder {
 
     public Bot bot;
 
     public BotBuilder() {
+            ApiContextInitializer.init();
     }
 
     public void createBot(String botUsername, String botToken){

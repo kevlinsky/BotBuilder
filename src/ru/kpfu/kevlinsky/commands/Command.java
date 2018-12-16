@@ -1,9 +1,9 @@
-package commands;
+package ru.kpfu.kevlinsky.commands;
 
-import main.Bot;
-import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.kpfu.kevlinsky.main.Bot;
 
-public class Command{
+public class Command implements ICommand{
     public final String reply;
     public Message message;
     public Bot bot;
