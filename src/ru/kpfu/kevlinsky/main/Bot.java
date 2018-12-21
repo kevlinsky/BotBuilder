@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import ru.kpfu.kevlinsky.commands.Command;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class Bot extends TelegramLongPollingBot {
 
     public String botUsername;
     public String botToken;
+
+    public boolean flag = false;
+    public Weather weather = new Weather();
 
     public void init() {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
@@ -83,11 +87,21 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         Message message = update.getMessage();
+        boolean foundCommand = false;
         for (int i = 0; i < commands.size(); i++) {
             if (commandsName.get(i).equals(message.getText())) {
                 commands.get(i).setBot(this);
                 commands.get(i).setMessage(message);
                 commands.get(i).execute();
+                foundCommand = true;
+            }
+        }
+        if (this.flag == true && foundCommand == false){
+            try {
+                String weather = this.weather.getWeather(message.getText());
+                sendMsg(message, weather);
+            } catch (IOException e) {
+                sendMsg(message, "Unknown city");
             }
         }
     }
@@ -143,4 +157,8 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     public String getButtons(){return this.buttonsName.toString();}
+
+    public void setFlag(boolean f){
+        this.flag = f;
+    }
 }

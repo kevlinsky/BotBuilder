@@ -38,6 +38,7 @@ public class Test {
         } catch (ReactionException e) {
             e.printStackTrace();
         }
+        bb.addWeatherBot();
         bb.getBot().init();
     }
 }

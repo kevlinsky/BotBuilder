@@ -72,6 +72,10 @@ public class BotBuilder {
         }
     }
 
+    public void addWeatherBot(){this.bot.setFlag(true);}
+
+    public void removeWeatherBot(){this.bot.setFlag(false);}
+
     public Bot getBot(){
         return this.bot;
     }
