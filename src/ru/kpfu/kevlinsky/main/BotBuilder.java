@@ -12,8 +12,7 @@ import java.util.List;
 public class BotBuilder {
 
     public Bot bot;
-    public List<String> reactions = new ArrayList<>();
-    public List<String> commands = new ArrayList<>();
+    public List<Command> commands = new ArrayList<>();
     public List<String> buttons = new ArrayList<>();
 
     public BotBuilder() {
@@ -26,48 +25,36 @@ public class BotBuilder {
         this.bot.setBotUsername(botUsername);
     }
 
-    public void addCommandReaction(String commandName, String reaction) throws CommandException, ReactionException {
-        if (!this.commands.contains(commandName)) {
-            this.commands.add(commandName);
-            if (!this.reactions.contains(reaction)) {
-                this.reactions.add(reaction);
-                Command command = new Command(reaction);
-                this.bot.addCommand(commandName, command);
-            } else {
-                throw new ReactionException("This reaction is already exist");
-            }
-        } else {
+    public void addCommand(Command command) throws CommandException, ReactionException {
+        if (this.commands.contains(command)) {
             throw new CommandException("This command is already exist");
         }
+        this.commands.add(command);
+        this.bot.addCommand(command);
     }
 
     public void addButton(String buttonName) throws ButtonException {
-        if (!this.buttons.contains(buttonName)) {
-            this.buttons.add(buttonName);
-            this.bot.addButton(buttonName);
-        } else {
+        if (this.buttons.contains(buttonName)) {
             throw new ButtonException("This button is already exist");
         }
+        this.buttons.add(buttonName);
+        this.bot.addButton(buttonName);
 
     }
 
-    public void addButtonReaction(String buttonName, String reaction) throws ReactionException{
-        this.commands.add(buttonName);
-        if (!this.reactions.contains(reaction)) {
-            this.reactions.add(reaction);
-            Command command = new Command(reaction);
-            this.bot.addCommand(buttonName, command);
-        } else {
+    public void addButtonReaction(Command command) throws ReactionException{
+        if (this.commands.contains(command)) {
             throw new ReactionException("This reaction is already exist");
         }
+        this.commands.add(command);
+        this.bot.addCommand(command);
     }
 
-    public void deleteCommand(String commandName){
-        this.bot.deleteCommand(commandName);
+    public void deleteCommand(Command command){
+        this.bot.deleteCommand(command);
         for (int i = 0; i < this.commands.size(); i++) {
-            if (this.commands.get(i).equals(commandName)){
+            if (this.commands.get(i).equals(command)){
                 this.commands.remove(i);
-                this.reactions.remove(i);
             }
         }
     }
@@ -76,11 +63,10 @@ public class BotBuilder {
         this.bot.deleteButton(buttonName);
     }
 
-    public void deleteButtonReaction(String reaction){
-        this.bot.deleteCommand(reaction);
-        for (int i = 0; i < this.reactions.size(); i++) {
-            if (this.reactions.get(i).equals(reaction)){
-                this.reactions.remove(i);
+    public void deleteButtonReaction(Command command){
+        this.bot.deleteCommand(command);
+        for (int i = 0; i < this.commands.size(); i++) {
+            if (this.commands.get(i).equals(command)){
                 this.commands.remove(i);
             }
         }
@@ -91,11 +77,19 @@ public class BotBuilder {
     }
 
     public List<String> getReactions() {
+        List<String> reactions = new ArrayList<>();
+        for (int i = 0; i < commands.size(); i++) {
+            reactions.add(commands.get(i).getReply());
+        }
         return reactions;
     }
 
     public List<String> getCommands() {
-        return commands;
+        List<String> s = new ArrayList<>();
+        for (int i = 0; i < commands.size(); i++) {
+            s.add(commands.get(i).getName());
+        }
+        return s;
     }
 
     public List<String> getButtons() {

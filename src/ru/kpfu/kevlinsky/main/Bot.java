@@ -110,18 +110,18 @@ public class Bot extends TelegramLongPollingBot {
         this.botToken = botToken;
     }
 
-    public void addCommand(String commandName, Command command){
+    public void addCommand(Command command){
         this.commands.add(command);
-        this.commandsName.add(commandName);
+        this.commandsName.add(command.getName());
     }
 
     public void addButton(String buttonName){
         this.buttonsName.add(buttonName);
     }
 
-    public void deleteCommand(String commandName){
+    public void deleteCommand(Command command){
         for (int i = 0; i < this.commandsName.size(); i++) {
-            if(this.commandsName.get(i).equals(commandName)){
+            if(this.commands.get(i).equals(command)){
                 this.commandsName.remove(i);
                 this.commands.remove(i);
             }
